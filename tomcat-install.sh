@@ -6,7 +6,7 @@ sudo dnf install java
 
 sudo dnf -y install wget
 
-wget https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.1/bin/apache-tomcat-10.0.23.tar.gz
+wget https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.1/bin/apache-tomcat-10.1.1.tar.gz
 
 tar -xvf apache-tomcat-10*.tar.gz
 
@@ -21,6 +21,8 @@ sudo chown -R tomcat:tomcat /usr/local/tomcat/
 echo "export CATALINA_HOME="/usr/local/tomcat"" >> ~/.bashrc
 
 source ~/.bashrc
+
+cd /usr/local/tomcat/config
 
 sed -i "\$i <role rolename="manager-gui"/>\n<role rolename="admin-gui"/>\n<user username="admin" password="Starfire69!" roles="manager-gui,admin-gui"/>" tomcat-users.xml
 
