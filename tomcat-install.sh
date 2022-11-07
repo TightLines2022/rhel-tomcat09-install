@@ -1,8 +1,12 @@
 #This script is used to install Tomcat 10 on a new installation of RHEL 9.
 
-sudo dnf update
+subscription-manager register
+subscription-manager auto-attach
+subscription-manager attach
 
-sudo dnf install java
+sudo dnf update -y
+
+sudo dnf install java -y
 
 sudo dnf -y install wget
 
@@ -22,10 +26,13 @@ echo "export CATALINA_HOME="/usr/local/tomcat"" >> ~/.bashrc
 
 source ~/.bashrc
 
-cd /usr/local/tomcat/config
+cd /usr/local/tomcat/conf
 
-sed -i "\$i <role rolename="manager-gui"/>\n<role rolename="admin-gui"/>\n<user username="admin" password="Starfire69!" roles="manager-gui,admin-gui"/>" tomcat-users.xml
+sed -i "\$i <role rolename="manager-gui"/>\n<role rolename="admin-gui"/>\n<user username="admin" password="Password" roles="manager-gui,admin-gui"/>" tomcat-users.xml
 
 sudo firewall-cmd --zone=public --add-port=8080/tcp --permanent
 
 sudo firewall-cmd --reload
+
+/usr/local/tomcat/bin/startup.sh
+
