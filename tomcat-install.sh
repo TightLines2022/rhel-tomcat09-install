@@ -30,6 +30,13 @@ cd /usr/local/tomcat/conf
 
 sed -i "\$i <role rolename="manager-gui"/>\n<role rolename="admin-gui"/>\n<user username="admin" password="Password" roles="manager-gui,admin-gui"/>" tomcat-users.xml
 
+#Next two commands all users access to the Manager App and Host Manager. Omit if this access is not required or desired.
+
+sed -i 's/:0:0:1/&|.*/' /usr/local/tomcat/webapps/manager/META-INF/context.xml
+
+sed -i 's/:0:0:1/&|.*/' /usr/local/tomcat/webapps/host-manager/META-INF/context.xml
+
+
 sudo firewall-cmd --zone=public --add-port=8080/tcp --permanent
 
 sudo firewall-cmd --reload
