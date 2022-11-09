@@ -1,8 +1,9 @@
+#!/bin/bash
 #This script is used to install Tomcat 10 on a new installation of RHEL 9.
 
 subscription-manager register
 subscription-manager auto-attach
-subscription-manager attach
+subscription-manager 
 
 sudo dnf update -y
 
@@ -42,4 +43,3 @@ sudo firewall-cmd --zone=public --add-port=8080/tcp --permanent
 sudo firewall-cmd --reload
 
 /usr/local/tomcat/bin/startup.sh
-
