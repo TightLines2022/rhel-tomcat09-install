@@ -28,7 +28,7 @@ source ~/.bashrc
 
 cd /usr/local/tomcat/conf
 
-sed -i "\$i <role rolename="manager-gui"/>\n<role rolename="admin-gui"/>\n<user username="admin" password="Password" roles="manager-gui,admin-gui"/>" tomcat-users.xml
+sed -i '/tomcat-users>/i<role rolename="manager-gui"/>\n<role rolename="admin-gui"/>\n<user username="admin" password="Password" roles="manager-gui,admin-gui"/>' tomcat-users.xml
 
 #Next two commands all users access to the Manager App and Host Manager. Omit if this access is not required or desired.
 
