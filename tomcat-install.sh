@@ -3,7 +3,7 @@
 
 subscription-manager register
 subscription-manager auto-attach
-subscription-manager 
+subscription-manager attach
 
 sudo dnf update -y
 
@@ -27,9 +27,18 @@ echo "export CATALINA_HOME="/usr/local/tomcat"" >> ~/.bashrc
 
 source ~/.bashrc
 
+mv cluster-config /usr/local/tomcat/conf
+
 cd /usr/local/tomcat/conf
 
+# Add manager username and password
+
 sed -i '/tomcat-users>/i<role rolename="manager-gui"/>\n<role rolename="admin-gui"/>\n<user username="admin" password="Password" roles="manager-gui,admin-gui"/>' tomcat-users.xml
+
+# Add Cluster configuration and server name to server.xml Requires Cluster configuration script in seperate file. In this case >cluster-config<
+
+sed -i '/<Engine name="Catalina" defaultHost="localhost">/r cluster-config' server.xml
+sed -i 's/Engine name="Catalina" defaultHost="localhost"/& jvmRoute="tomcat2"/' server.xml
 
 #Next two commands all users access to the Manager App and Host Manager. Omit if this access is not required or desired.
 
