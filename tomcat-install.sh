@@ -1,6 +1,11 @@
 #!/bin/bash
 #This script is used to install Tomcat 10 on a new installation of RHEL 9.
 
+#Credentials - to be configured as desired before running script.
+username='"admin"'
+password='"password"'
+server_name='"tomcat1"'
+
 subscription-manager register
 subscription-manager auto-attach
 subscription-manager attach
@@ -33,14 +38,20 @@ cd /usr/local/tomcat/conf
 
 # Add manager username and password
 
-sed -i '/tomcat-users>/i<role rolename="manager-gui"/>\n<role rolename="admin-gui"/>\n<user username="admin" password="Password" roles="manager-gui,admin-gui"/>' tomcat-users.xml
+sed -i '/tomcat-users>/i<role rolename="manager-gui"/>\n<role rolename="admin-gui"/>\n<user username=<username> password=<password> roles="manager-gui,admin-gui"/>' tomcat-users.xml
 
 # Add Cluster configuration and server name to server.xml Requires Cluster configuration script in seperate file. In this case >cluster-config<
 
 sed -i '/<Engine name="Catalina" defaultHost="localhost">/r cluster-config' server.xml
-sed -i 's/Engine name="Catalina" defaultHost="localhost"/& jvmRoute="tomcat2"/' server.xml
+sed -i 's/Engine name="Catalina" defaultHost="localhost"/& jvmRoute=<server_name>/' server.xml
 
-#Next two commands all users access to the Manager App and Host Manager. Omit if this access is not required or desired.
+#Enter credential variables into config files.
+
+sed -i "s/<username>/$username/" tomcat-users.xml
+sed -i "s/<password>/$password/" tomcat-users.xml
+sed -i "s/<server_name>/$server_name/" server.xml
+
+#Next two commands allow all users access to the Manager App and Host Manager. Omit if this access is not required or desired.
 
 sed -i 's/:0:0:1/&|.*/' /usr/local/tomcat/webapps/manager/META-INF/context.xml
 
