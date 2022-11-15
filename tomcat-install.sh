@@ -2,18 +2,30 @@
 #This script is used to install Tomcat 10 on a new installation of RHEL 9.
 
 #Credentials - to be configured as desired before running script.
-username='"admin"'
-password='"password"'
-server_name='"tomcat1"'
+
+echo -n "Enter username :"
+read -r username
+
+echo -n "Enter password :"
+read -r password
+
+echo -n "Enter server name :"
+read -r server_name
+
+username=\"${username}\"
+password=\"${password}\"
+server_name=\"${server_name}\"
+
+#Verify RHEL Subscription
 
 subscription-manager register
 subscription-manager auto-attach
 subscription-manager attach
 
+#Buildout of Tomcat Server
+
 sudo dnf update -y
-
 sudo dnf install java -y
-
 sudo dnf -y install wget
 
 wget https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.1/bin/apache-tomcat-10.1.1.tar.gz
@@ -57,9 +69,12 @@ sed -i 's/:0:0:1/&|.*/' /usr/local/tomcat/webapps/manager/META-INF/context.xml
 
 sed -i 's/:0:0:1/&|.*/' /usr/local/tomcat/webapps/host-manager/META-INF/context.xml
 
+#Open ports on firewall for remote access to server.
 
 sudo firewall-cmd --zone=public --add-port=8080/tcp --permanent
 
 sudo firewall-cmd --reload
+
+#Start Tomcat Server
 
 /usr/local/tomcat/bin/startup.sh
