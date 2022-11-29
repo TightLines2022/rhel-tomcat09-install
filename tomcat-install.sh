@@ -15,6 +15,7 @@ read -r server_name
 username=\"${username}\"
 password=\"${password}\"
 server_name=\"${server_name}\"
+ip_address=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
 
 #Verify RHEL Subscription
 
@@ -28,11 +29,11 @@ sudo dnf update -y
 sudo dnf install java -y
 sudo dnf -y install wget
 
-wget https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.1/bin/apache-tomcat-10.1.1.tar.gz
+wget https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.69/bin/apache-tomcat-9.0.69.tar.gz
 
-tar -xvf apache-tomcat-10*.tar.gz
+tar -xvf apache-tomcat-9*.tar.gz
 
-sudo mv apache-tomcat-10.1.1 /usr/local/tomcat
+sudo mv apache-tomcat-9.0.69 /usr/local/tomcat
 
 sudo groupadd tomcat
 
@@ -71,9 +72,12 @@ sed -i 's/:0:0:1/&|.*/' /usr/local/tomcat/webapps/host-manager/META-INF/context.
 
 #Open ports on firewall for remote access to server.
 
-sudo firewall-cmd --zone=public --add-port=8080/tcp --permanent
-
+sudo firewall-cmd --add-port=8080/tcp --permanent
+sudo firewall-cmd --add-port=4000-4100/tcp --permanent
+sudo firewall-cmd --add-port=45564/udp --permanent
 sudo firewall-cmd --reload
+
+hostnamectl set-hostname $server_name
 
 #Start Tomcat Server
 
