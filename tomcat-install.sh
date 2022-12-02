@@ -79,6 +79,22 @@ sudo firewall-cmd --reload
 
 hostnamectl set-hostname $server_name
 
+#Set up JNDI Connector 
+wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-8.0.31.tar.gz
+tar -xvf mysql-connector-j-8.0.31.tar.gz
+mv mysql-connector-j-8.0.31/mysql* /usr/local/tomcat/lib
+
+#Add DB Resources to Tomcat context.xml from the context-resource-config file
+mv ~/context-resource-config /usr/local/tomcat/conf/
+awk 'FNR==NR{n=n $0 ORS; next} /<\/Context>/{$0=n $0} 1' context-resource-config context.xml > context_temp
+mv context_temp context.xml
+
+#This line just enables the 'example' web to demostrate the session replication between the loadbalanced TC servers.
+sed -i '/<\/web-app>/i<distributable/>' /usr/local/tomcat/webapps/examples/WEB-INF/web.xml
+
+#Push the JNDIDemo folder to the webapps folder to demonstrate the DB Connetions and session rep for this web app.
+mv ~/JNDIDemo/ /usr/local/tomcat/webapps/
+
 #Start Tomcat Server
 
 /usr/local/tomcat/bin/startup.sh
