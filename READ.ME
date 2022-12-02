@@ -1,0 +1,27 @@
+Tomcat 9 Installation script
+ver. 1.00
+
+This project is a POC to demonstrate the ease of installation and replication capabilities of installing Tomcat and creating a 
+load balanced system with two or more instances of this application server. 
+
+It is expected that this script will be run on a VM server currently running RHEL 9 as this is the version that this script was tested against.
+It's possible that it will work on an earlier version of RHEL.
+
+The type of session replication and ports involved can be manipulated by making simple changes in the 'cluster-config' file before 
+running the script. These modifications will be automatically added to the server.xml file upon deployment.
+
+There is also a configuration and web app included with this repo that can be used to demonstrate a connection to a preexisting MySQL database. 
+By making modifations to the context-resource-config file, DB connection resources can be added to the context.xml file upon deployment of the TC server.
+
+Description of files included in this repo:
+
+    tomcat-install.sh - Primary installation file.
+
+    cluster-config - Used to outline the session replication configuration for the load balanced instances.
+
+    context-resource-config - Describes the DB connection resources that will be pushed to the context.xml file upon deployment.
+
+    dbscript.sql - This is just a simple query that builds out a MySQL database schema for demonstration purposes.
+
+    JNDIDemo folder/files - This is a web app that is used to demonstrate the connection created to the DB instance outlined in the
+                            context-resource-config file. It simply displays the table created in the dbscript.sql query.

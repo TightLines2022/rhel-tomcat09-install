@@ -1,5 +1,9 @@
 #!/bin/bash
-#This script is used to install Tomcat 10 on a new installation of RHEL 9.
+: '
+This script is used to install Tomcat 10 on a new installation of RHEL 9. 
+It utilized accompaning files (cluster-config & context-resource-config) to add the 
+necessary configurations to utilize session replication and JNDI connections.
+ '
 
 #Credentials - to be configured as desired before running script.
 
