@@ -19,8 +19,8 @@ read -r server_name
 username=\"${username}\"
 password=\"${password}\"
 server_name=\"${server_name}\"
-ip_address=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
-
+#ip_address=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+home_dir=$(pwd)
 #Verify RHEL Subscription
 
 subscription-manager register
@@ -50,6 +50,11 @@ echo "export CATALINA_HOME="/usr/local/tomcat"" >> ~/.bashrc
 source ~/.bashrc
 
 mv cluster-config /usr/local/tomcat/conf
+
+#Set up JNDI Connector 
+wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-8.0.31.tar.gz
+tar -xvf mysql-connector-j-8.0.31.tar.gz
+mv mysql-connector-j-8.0.31/mysql* /usr/local/tomcat/lib
 
 cd /usr/local/tomcat/conf
 
@@ -83,13 +88,8 @@ sudo firewall-cmd --reload
 
 hostnamectl set-hostname $server_name
 
-#Set up JNDI Connector 
-wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-8.0.31.tar.gz
-tar -xvf mysql-connector-j-8.0.31.tar.gz
-mv mysql-connector-j-8.0.31/mysql* /usr/local/tomcat/lib
-
 #Add DB Resources to Tomcat context.xml from the context-resource-config file
-mv /home/dgray/context-resource-config /usr/local/tomcat/conf/
+mv $home_dir/context-resource-config /usr/local/tomcat/conf/
 awk 'FNR==NR{n=n $0 ORS; next} /<\/Context>/{$0=n $0} 1' context-resource-config context.xml > context_temp
 mv /usr/local/tomcat/conf/context_temp context.xml
 
@@ -97,7 +97,7 @@ mv /usr/local/tomcat/conf/context_temp context.xml
 sed -i '/<\/web-app>/i<distributable/>' /usr/local/tomcat/webapps/examples/WEB-INF/web.xml
 
 #Push the JNDIDemo folder to the webapps folder to demonstrate the DB Connetions and session rep for this web app.
-mv /home/dgray/JNDIDemo/ /usr/local/tomcat/webapps/
+mv $home_dir/JNDIDemo/ /usr/local/tomcat/webapps/
 
 #Start Tomcat Server
 

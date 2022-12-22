@@ -6,7 +6,7 @@
     maxIdle="300"
     maxWait="10000"
     driverClassName="com.mysql.cj.jdbc.Driver"
-    url="jdbc:mysql://192.168.1.156:3306/usersDB"
+    url="jdbc:mysql://192.168.1.209:3306/usersDB"
     username="CoolMaxx"
     password="Starfire69!"
     />
