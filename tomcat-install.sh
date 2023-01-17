@@ -16,11 +16,19 @@ read -r password
 echo -n "Enter server name :"
 read -r server_name
 
+echo -n "Enter the required connection driver URL (example: https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-8.0.31.tar.gz):"
+read -r driver_url
+
 username=\"${username}\"
 password=\"${password}\"
 server_name=\"${server_name}\"
+driver_urs=\"{driver_url}\"
+
+# This pulls the working directory for current user. This is assuming install files are here.
+home_dir=$(pwd) 
+
 #ip_address=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
-home_dir=$(pwd)
+
 #Verify RHEL Subscription
 
 subscription-manager register
@@ -49,10 +57,11 @@ echo "export CATALINA_HOME="/usr/local/tomcat"" >> ~/.bashrc
 
 source ~/.bashrc
 
+# Push 'cluster-config' file to the tomcat config folder.
 mv cluster-config /usr/local/tomcat/conf
 
 #Set up JNDI Connector 
-wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-8.0.31.tar.gz
+wget $driver_url
 tar -xvf mysql-connector-j-8.0.31.tar.gz
 mv mysql-connector-j-8.0.31/mysql* /usr/local/tomcat/lib
 
